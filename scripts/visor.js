@@ -166,7 +166,7 @@ $(document).ready(function() {
 
 	*/
 
-	var geoserverUrl = "http://localhost:8085/geoserver/";
+	var geoserverUrl = "https://localhost:8085/geoserver/";
 
 
 	var sectores_param = new ol.source.ImageWMS({
@@ -250,7 +250,7 @@ $(document).ready(function() {
 						type: 'base',
                         visible: false,
                         source: new ol.source.ImageWMS({
-						url: "http://localhost:8085/geoserver/proyecto/wms",
+						url: "https://localhost:8085/geoserver/proyecto/wms",
 			            params: {
 				        'VERSION': '1.1.1',
 				        'FORMAT': 'image/png',
@@ -263,7 +263,7 @@ $(document).ready(function() {
 						type: 'base',
                         visible: false,
                         source: new ol.source.ImageWMS({
-						url: "http://localhost:8085/geoserver/proyecto/wms",
+						url: "https://localhost:8085/geoserver/proyecto/wms",
 			            params: {
 				        'VERSION': '1.1.1',
 				        'FORMAT': 'image/png',

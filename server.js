@@ -1,3 +1,4 @@
+var http = require('http'); 
 var connect = require('connect');
 var serveStatic = require('serve-static');
 var path = require('path');

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	  <title>OpenLayers - Máster SIG US</title>	
+	  
+<meta charset="utf-8" />
+	  <meta name="description" content="Un ejemplo completo de
+					    OpenLayers" />
+	  <meta name="keywords" content="visor, cartografía, html5, css3,
+					 javascript, openlayers" />
+  
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    
+      <link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+	  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"> 	 
+	  <link rel="stylesheet" type="text/css" href="css/estilos.css">          	  
+	  <link rel="stylesheet" type="text/css" href="scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css">
+	  <link rel="stylesheet" type="text/css" href="scripts/jquery-ui-1.11.4.custom/jquery-ui.structure.min.css">
+	  <link rel="stylesheet" type="text/css" href="scripts/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css">	  
+	  <link rel="stylesheet" type="text/css" href="css/ol.css">     
+	   
+
+	  <script src="scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js" type="text/javascript"></script>
+	  <script src="scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"
+	   type="text/javascript"></script>
+
+    	   
+	<!-- <script src="scripts/visor.js" type="text/javascript"></script>  -->
+	 <script src="scripts/ol.js"    type="text/javascript"></script>
+	 <script src="scripts/ol3-layerswitcher.js" type="text/javascript"> </script>
+	
+	 
+	  <!-- Estilos y JavaScript para controlar el popup -->
+	  <link rel="stylesheet" href="css/ol3-popup.css" />
+	  <script src="scripts/ol3-popup.js" type="text/javascript"></script>
+
+
+	
+
+<style type="text/css">
+a:link {
+color: #054a86
+}
+
+</style>	
+
+			
+</head>
+
+ 	<body>
+	
+	  <div id="contenedor">	  
+    
+	    <header>
+	      <h1>Capacidad de uso del suelo - Proyecto final de Máster SIG</h1>
+		  <a  href="index.html"> <h6>SPANISH VERSION<h6> </a>
+	    </header>
+		
+<!-- Tabs -->
+ <div id="tabs">
+	<ul>	    
+	    <li><a href="#tabs-1">Introducción</a></li>
+		<li><a href="#tabs-2">Metodología</a></li>		
+		<li><a href="#tabs-3">Tecnología empleada</a></li>						
+		<li><a href="#tabs-4">Modelo de la base de datos</a></li>
+		<li><a href="#tabs-5">Visor</a></li>
+		<li><a href="#tabs-6">Sobre mi</a></li>
+	</ul>
+	
+<div id="tabs-1">
+
+ <div class="marco">
+     <div class="parrafo">
+	    <p class="tabla">The objective of the web application developed, based on OGC standards for the access and visualization of geographic information, is to provide the technicians with a simple and accessible web tool that helps in the decision making processes and the analysis of the capacity of Land uses as part of an Environmental Assessment Study.</p> </div>
+		<p class="tabla">This application has a layered architecture (data warehouses, services and clients) and has been developed with OpenSource technologies (PostGIS, Geoserver, Apache httpd, OpenLayers) and consumes proprietary data published using OGC (WMS and WFS) standards and layers Of soils (lithological, geological, topographical, orthoimages) and climatic (rainfall and temperature).</p>  
+		<h3 class="subrayado"> Desarrollo del Visor </h3>
+		<p class="tabla"> Se propone una arquitectura cliente-servidor en tres capas que hace uso de seis componentes de código abierto, cada uno con su papel funcional particular: </p>
+		<ol class="lista">
+		  <li><p>Recopilación de información geográfica base y temática para su respectivo análisis y tratamiento.</p></li>
+		  <li><p>Creación del modelo relacional de la información geográfica.</p></li>
+		  <li><p>Almacenamiento de datos y generación de consultas: BBDD Postgres con extensión espacial PostGIS.</p></li>		  
+		  <li><p>Servidor de mapas y datos geográficos (GeoServer). </p></li>		 
+		  <li><p>Interfaz de desarrollo de componentes de mapas (OpenLayers). </p></li>		  
+		  <li><p>La visualización de los datos en un geovisor web con herramientas de visualización y manejo SIG bajo plataforma OpenLayers.</p></li>
+		</ol>		
+		<img src="imagenes/esquema1.jpg"  class=imagen alt="esquema trabajo"> 						   
+     
+  </div>
+</div>
+
+ <div id="tabs-2">
+	 <div class="marco">
+        <div class="parrafo">
+		
+         
+    <p class="tabla">Para la determinación de la capacidad de uso (o acogida) de cada actividad a ordenar en el término municipal, se aplica un modelo que opera sobre los conceptos de <b>vulnerabilidad</b>, efecto de la actividad sobre cada unidad ambiental y <b>aptitud</b>, medida en que el medio cubre los requisitos de localización de una actividad. Este modelo tiene su fundamento en la evidencia de que la mayor capacidad de acogida la proporcionan aquellas unidades de integración donde coinciden la máxima aptitud con el mínimo grado de vulnerabilidad.</p></div>
+    <p class="tabla">Para su desarrollo práctico se formalizan matrices de vulnerabilidad y de aptitud por cada unidad ambiental homogénea.</p>
+    <p class="tabla"> Se construye una matriz de vulnerabilidad que indica en las casillas de cruce la vulnerabilidad de las diferentes unidades ambientales frente los diferentes usos actuales o potenciales del medio físico:</p>
+
+        <table class="tg" text-align="center" style="undefined;table-layout: fixed; width: 225px">
+         <colgroup>
+           <col style="width: 76px">
+           <col style="width: 149px">
+         </colgroup>
+  <tr>
+    <th class="tg-yw4l">VALOR </th>
+    <th class="tg-yw4l">RANGO</th>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">  0</td>
+    <td class="tg-yw4l">Muy desfavorable</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">  1</td>
+    <td class="tg-yw4l">Desfavorable</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">  2 </td>
+    <td class="tg-yw4l">Indiferente</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">  3</td>
+    <td class="tg-yw4l">Positivo</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">  4</td>
+    <td class="tg-yw4l">Muy positivo</td>
+  </tr>
+</table>
+
+   <p class="tabla">La matriz de aptitud se desarrolla a partir de unos factores que dependen de las características de la actuación de que se trate (presencia de buenas comunicaciones, existencia de un recurso, proximidad a zonas pobladas, geomorfología, etc). Cada una de las unidades tendrá pues uno de los siguientes valores:</p> 
+
+    <table class="tg">
+      <colgroup>
+        <col style="width: 69px">
+        <col style="width: 169px">
+      </colgroup>
+  <tr>
+    <th class="tg-bah">VALOR </th>
+    <th class="tg-yw4l">RANGO</th>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">0</td>
+    <td class="tg-yw4l">Muy negativa</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">1</td>
+    <td class="tg-yw4l">Negativa</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">2</td>
+    <td class="tg-yw4l">Indiferente</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">3</td>
+    <td class="tg-yw4l">Positiva</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">4</td>
+    <td class="tg-yw4l">Muy positiva</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">5</td>
+    <td class="tg-yw4l">Sobresaliente</td>
+  </tr>
+</table>
+
+     <p class="tabla">
+	 La agrupación final de los impactos(vulnerabilidad) y aptitudes agregadas en clases de valor expresan los criterios para la determinación de la capacidad de acogida de cada unidad de integración, según los criterios expresados en la siguiente tabla:</p>
+    
+	<div class="tg-wrap"><table id="tg-4pOjn" class="tg" style="undefined;table-layout: fixed; width: 835px">
+<colgroup>
+<col style="width: 103px">
+<col style="width: 172px">
+<col style="width: 112px">
+<col style="width: 112px">
+<col style="width: 112px">
+<col style="width: 112px">
+<col style="width: 112px">
+</colgroup>
+  <tr>
+    <th class="tg-baqh" colspan="7">             Clases de APTITUD agregada</th>
+  </tr>
+  <tr>
+    <td class="tg-baqh" rowspan="6"><br><br><br><br>Clases de IMPACTO agregado</td>
+    <td class="tg-yw4l"></td>
+    <td class="tg-baqh">Muy negativa<br>1</td>
+    <td class="tg-baqh">Negativa<br>2</td>
+    <td class="tg-baqh">Indiferente<br>3</td>
+    <td class="tg-baqh">Positiva<br>4</td>
+    <td class="tg-baqh">Muy positiva<br>5</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Muy desfavorable 1</td>
+    <td class="tg-ymlh" rowspan="5"><br><br><br><br>MUY BAJA</td>
+    <td class="tg-ymlh" rowspan="2"><br>MUY BAJA<br></td>
+    <td class="tg-ymlh" colspan="3">MUY BAJA</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Desfavorable        2 </td>
+    <td class="tg-8xib">BAJA</td>
+    <td class="tg-v7c1"></td>
+    <td class="tg-v7c1"></td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Indiferente            3</td>
+    <td class="tg-7geq" rowspan="3"><br>BAJA</td>
+    <td class="tg-nro3">MEDIA</td>
+    <td class="tg-5nhi" colspan="2">ALTA</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Positivo                4</td>
+    <td class="tg-5nhi" colspan="2" rowspan="2">ALTA</td>
+    <td class="tg-8lti" rowspan="2"><br>MUY BAJA</td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Muy positivo        5</td>
+  </tr>
+</table></div>
+
+
+   <h5><b>Tabla 1.Criterios para la determinación de la capacidad de acogida a partir de rangos
+ de impacto y aptitud. (GÓMEZ OREA, 1994)</b></h5>
+   
+
+ </div>
+</div>
+	
+<div id="tabs-3">
+	<div class="services" id="services">
+		
+			<h3 class="title">Desarrollo del Visor</h3>
+			<div class="servc-grids">
+				<div class="col-md-6 servc-grid">
+					<div class="col-xs-3 servc-grid-left">
+							<a href="http://www.postgresql.org.es/" target="_blank">
+								 <img src="imagenes/postgresql.png" class="img-rounded" alt="postgresql" width="80" height="72"> 
+								</a>
+					</div>
+					<div class="col-xs-9 servc-grid-right">
+						<h4>Base de datos</h4>
+						<p>PostgreSQL es un sistema de gestión de bases de datos objeto-relacional, 
+						distribuido bajo licencia BSD y con su código fuente disponible libremente. 
+						<b>PostGIS</b> es un módulo que añade soporte de objetos geográficos a la base de datos, 
+						convirtiéndola en una base de datos espacial para su utilización en Sistema de Información Geográfica. Se publica 
+						bajo la Licencia Pública General de GNU.</p>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="col-md-6 servc-grid">
+					<div class="col-xs-3 servc-grid-left">
+						
+						        <a href="http://geoserver.org/" target="_blank">
+								 <img src="imagenes/geoserver.png" class="img-rounded" alt="geoserver" width="80" height="72"> 
+								</a>
+						
+					</div>
+					<div class="col-xs-9 servc-grid-right">
+						<h4>GeoServer</h4>
+						<p>GeoServer es un Servidor Web que permite servir mapas y datos de diferentes 
+                        formatos para aplicaciones Web, ya sean clientes Web ligeros, o programas GIS 
+                        desktop. Esto significa que puedes almacenar datos espaciales en casi cualquier 
+                        formato que se desee, y los usuarios no tienen que saber nada sobre datos GIS. En 
+                        el nivel más simple, lo que único que necesitan es un Web Browser para ver exactamente 
+                        tus mapas como tu quieras.</p>						
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="servc-grids">
+				<div class="col-md-6 servc-grid">
+					<div class="col-xs-3 servc-grid-left">
+						  <a href="http://www.openlayers.org/" target="_blank">
+								 <img src="imagenes/openlayers.png" class="img-rounded" alt="openlayers" width="80" height="80"> 
+								</a>
+						
+					</div>
+					<div class="col-xs-9 servc-grid-right">
+						<h4>OpenLayers</h4>
+						<p>OpenLayers es una biblioteca de JavaScript de código abierto bajo una derivación 
+                        de la licencia BSD para mostrar mapas interactivos en los navegadores web. OpenLayers 
+                        ofrece un API para acceder a diferentes fuentes de información cartográfica en la red: 
+                        Web Map Services, Mapas comerciales (tipo Google Maps, Bing, Yahoo), Web Features Services, 
+                        distintos formatos vectoriales, mapas de OpenStreetMap, etc.</p>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="col-md-6 servc-grid">
+					<div class="col-xs-3 servc-grid-left">
+						
+						<a href="http://www.qgis.org/es/site/" target="_blank">
+								 <img src="imagenes/qgis.png" class="img-rounded" alt="qgis" width="80" height="80"> 
+								</a>
+						
+					</div>
+					<div class="col-xs-9 servc-grid-right">
+						<h4>Qgis</h4>
+						<p>QGIS es un Sistema de Información Geográfica (SIG) de Código Abierto licenciado bajo 
+						GNU - General Public License . QGIS es un proyecto oficial de Open Source Geospatial 
+						Foundation (OSGeo). Corre sobre Linux, Unix, Mac OSX, Windows y Android y soporta numerosos 
+						formatos y funcionalidades de datos vector, datos ráster y bases de datos.</p>
+				     </p>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="servc-grids">
+				<div class="col-md-6 servc-grid">
+					<div class="col-xs-3 servc-grid-left">
+					
+					           <a href="https://www.w3.org/wiki/The_web_standards_model_-_HTML_CSS_and_JavaScript" target="_blank">
+								 <img src="imagenes/html.png" class="img-rounded" alt="html" width="100" height="62"> 
+								</a>
+						
+					</div>
+					<div class="col-xs-9 servc-grid-right">
+						<h4>Diseño y programación web</h4>						
+						<p> El lenguaje <b> HTML (HyperText Markup Language)</b> hace referencia al lenguaje de marcado para la elaboración de páginas web. Define una estructura básica y un código para la definición de contenido de una página web, como texto, imágenes, videos, juegos, entre otros.</p>
+						<p> El lenguaje de estilos<b> CSS (Cascading Style Sheets)</b> se utiliza para controlar la presentación, el formato, y el diseño de un documento estructurado escrito en HTML. La idea que se encuentra detrás del desarrollo de CSS es separar la estructura de un documento de su presentación.</p>
+						<p><b>JavaScript</b> es un lenguaje de programación, interpretado principalmente por un navegador web, permite agregar mejoras en interfaces de usuario y dinamismo (es decir movilidad/actividad) en nuestros documentos dentro del navegador web.</p>
+		
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			<div class="clearfix"> </div>
+			</div>
+		</div>	
+			
+</div>
+
+ <div id="tabs-4">      
+      <img SRC="imagenes/modelo_datos.jpg" alt="modelo datos">	  
+ </div> 	
+	
+<div id="tabs-5">
+
+ <div id="map"> 
+		
+<div id="menu2">
+    <ul id="accordion" >
+	  <li>Unidades Ambientales</li>
+	     <ul>
+	         <li class="check">
+		    <input id="capa_unidades" type="checkbox">
+				<div class="inline">
+		             <select id="unidades_param"> 
+                         				 
+		                 <option value="1">Bosque de Alcornoque</option>
+		                 <option value="2">Monte bajo con Acebuche y Alcornoques dispersos</option>
+		                 <option value="3">Monte bajo con matorral denso</option>
+			             <option value="4">Pastizal-matorral</option>
+			             <option value="5">Pastizal continuo</option>
+			             <option value="6">Ribera de arroyo</option>
+			             <option value="7">Vía pecuaria</option>
+			             <option value="8">Frente de playa</option>
+		             </select>
+		        </div>				
+		</li>
+     </ul>		
+	<li>Actuaciones Propuestas</li>
+	  <ul>
+	<li  class="check">
+		    <input id="capa_areas" type="checkbox">
+		        <div class="inline">
+		             <select id="areas_param">		    
+		                 <option value="3">Equipamiento deportivo privado</option>
+		                 <option selected="selected" value="6">Residencial Intensivo</option>
+		                 <option value="1">Espacios libres público</option>
+			             <option value="5">Residencial Extensivo</option>
+			             <option value="4">Hoteles</option>
+			             <option value="8">Sistemas Generales Adscritos</option>
+			             <option value="7">Red viaria</option>
+			             <option value="2">Equipamiento público</option>			
+		             </select>
+	            </div>
+		</li>
+	</ul>	
+	
+	<li>Capacidad de Uso</li>
+	<ul>
+	<li  class="check">
+		    <input id="capa_sectores" type="checkbox">		 
+		        <div class="inline">
+		             <select id="sectores_param">		    
+		                 <option selected="selected" value="Muy Alta">Muy Alta</option>
+		                 <option value="Alta">Alta</option>
+		                 <option value="Media">Media</option>
+			             <option value="Baja">Baja</option>
+			             <option value="Muy baja">Muy baja</option>
+			             <option value="Nula">Nula</option>			
+		            </select>
+		       </div>		
+		   </li>
+	   </ul>
+    </ul>		
+       </div>
+  	
+</div> 
+    
+
+
+		     <p id="tooltip" class="secciones"> 
+        <span  class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;" title="Selección de las actuaciones propuestas en función de la capacidad de acogida de una determinada Unidad Ambiental">Combinaciones</span>
+    	 Selección de las actuaciones propuestas en función de la capacidad de acogida de una determinada Unidad Ambiental
+     </p>
+		
+		
+	 <div id="capas" class="controles">
+		 		
+	    <div class="check">
+		     <input id="capa_sectores2" type="checkbox">	
+	 
+		  <div class="inline">
+	      <select id="areas_param2">
+		  
+		    <option selected="selected" >Actuaciones propuestas</option>
+		    <option value="3">Equipamiento deportivo privado</option>
+		    <option value="6">Residencial Intensivo</option>
+		    <option value="1">Espacios libres público</option>
+			<option value="5">Residencial Extensivo</option>
+			<option value="4">Hoteles</option>
+			<option value="8">Sistemas Generales Adscritos</option>
+			<option value="7">Red viaria</option>
+			<option value="2">Equipamiento público</option>
+		  </select>
+	      </div>
+		  
+		
+		<div class="inline">
+		   <select id="sectores_param2">
+		    <option selected="selected" value="Muy Alta">Muy Alta</option>
+		    <option value="Alta">Alta</option>
+		    <option value="Media">Media</option>
+			<option value="Baja">Baja</option>
+			<option value="Muy baja">Muy baja</option>
+			<option value="Nula">Nula</option>
+			
+		  </select>
+		</div>
+		</div>
+			
+	</div>
+
+
+</div> 	
+
+
+
+
+ 
+  
+  <div id="tabs-6">      
+
+       <div class="container-fluid">
+      <div class="row main clearfix">
+        
+
+        <section class="col-md-3 card-wrapper profile-card-wrapper affix">
+          <div class="card profile-card">
+              <span class="profile-pic-container">
+                <div class="profile-pic">
+                  <img class="media-object img-circle center-block"  data-src="holder.js/150x150"
+                    alt="Reyes Antequera" src="imagenes/perfil.jpg">
+                </div>
+
+                <div class="name-and-profession">
+                  <h3 class="text-center text-bolder name"> Reyes Antequera</h3>
+                  <h5 class="text-muted text-center">Medio Ambiente y GIS</h5>
+                </div>
+              </span>
+              <hr>
+
+              <div class="contact-details clearfix">
+
+<!--                   <div class="detail">
+                    <span class="icon">
+                      <i class="fa fa-lg fa-location-arrow"></i>
+                    </span>
+
+                      <span class="info">
+                        Andalucía, España
+                      </span>
+                  </div> -->
+
+                  <div class="detail">
+                    <span class="icon">
+                      <i class="fa fa-lg fa-phone"></i>
+                    </span>
+
+                    <span class="info">
+                      +34 686 496 675
+                    </span>
+                  </div>
+
+                  <div class="detail">
+                    <span class="icon">
+                      <i class="fa fa-lg fa-envelope-o"></i>
+                    </span>
+
+                    <span class="info">
+                      <a href="mailto:rantmed87@gmail.com" class="link-disguise">rantmed87@gmail.com</a>
+                    </span>
+                  </div>
+
+                  <div class="detail">
+                    <span class="icon" title="Languages I speak">
+                      <i class="fa fa-lg fa-language"></i>
+                    </span>
+
+                    <span class="info">
+                      Inglés (B1), Francés (A2), Alemán (A1)
+                    </span>
+                  </div>			 
+				  
+				 <div class="detail">
+					<span class="icon" title="CV">
+                      <i class="fa fa-file-pdf-o"></i>
+                    </span>
+					
+                    <span class="info">
+                      <a href="imagenes/CV_Reyes_Antequera_2016.pdf">Curriculum Vitae</a>
+                    </span>
+                  </div>
+              </div>
+			  
+
+              <hr>        
+			    
+               <div class="social-links text-center">
+			      <a class="fa fa-skype fa-2x social-link link-skype"
+                       href="callto://amasusa" target="_blank"></a>
+                  <a class="fa fa-linkedin fa-2x social-link link-linkedin"
+                       href="https://www.linkedin.com/in/reyes-antequera" target="_blank"></a>
+				  <a class="fa fa-flickr fa-2x social-link link-flickr"
+                       href="https://www.flickr.com/photos/23936632@N05/" target="_blank"></a>
+				 
+              </div>
+          </div>
+        </section>
+
+        <section class="col-md-9 card-wrapper pull-right">
+          <div class="card background-card">
+<!--             <h4 class="text-uppercase text-bolder">Background</h4> -->
+<!--             <hr> -->
+
+            <div class="background-details">
+              <div class="detail" id="about">
+                <div class="icon">
+                  <i class="fa fa-lg fa-user"></i>
+                  <span class="mobile-title">Resumen</span>
+                </div>
+                <div class="info">
+                  <h4 class="title text-uppercase">
+                    Resumen
+                  </h4>
+
+                  <div class="descripcion">
+                    Reyes es <b>Licenciada en Ciencias Ambientales</b> especializada en <b>Sistemas de Información Geográfica</b> por la Universidad Pablo de Olavide y obtuvo el <b>Máster en Sistema de Información Geográfica: Planificación, Ordenación Territorial y Medio Ambiente</b> en el Centro de Formación Permanente de la Universidad de Sevilla. Tras completar su proyecto final de Máter relacionado con la creación de un Geovisor Web, utilizando la tecnología de leaflet, openlayer, geoserver, continuó su formación realizando prácticas extracurriculares en la Agencia de Medio Ambiente y aguas de Andalucía durante 6 meses donde se encuentra actualmente.
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail" id="work-experience">
+                <div class="icon">
+                  <i class="fa fa-lg fa-building"></i>
+                  <span class="mobile-title">Experiencia profesional</span>
+                </div>
+                <div class="info">
+                  <h4 class="title text-uppercase">
+                    Experiencia profesional
+                  </h4>
+
+                  <ul class="list-unstyled">
+                      <li class="card card-nested clearfix">
+                        <div class="content has-sidebar">
+                          <p class="clear-margin-sm">
+                            <strong>Analista GIS en prácticas en la Red de Información Ambiental de Andalucía</strong>&nbsp;
+                              <a href="http://www.juntadeandalucia.es/medioambiente/site/rediam"  target="_blank">(REDIAM)</a>;
+                          </p>
+                          <p class="text-muted visible-xs visible-sm">
+                            <small>
+                              <span class="space-right">
+                                Abril 2016 -
+                                  Octubre 2016
+                              </span>
+
+    <!--                             <span>
+                                  <i class="fa fa-clock-o icon-left"></i>
+                                  1 año 7 months
+                                </span> -->
+                            </small>
+                          </p>
+						    <ul class="lista">
+                                <li>Búsqueda, depuración, organización y normalización de información espacial.</li>
+                            </ul>
+							<ul>
+                                <li>Integración de información espacial en base de datos espaciales. </li>
+                            </ul>
+                            <ul class="lista">
+                                <li>Análisis de requisitos de información espacial y territorial.</li>
+                            </ul>
+                            <ul>
+                                <li>Trabajos de conversión de sistemas de coordenadas sobre información espacial.</li>
+                            </ul>  
+                            <ul class="lista">
+                                <li>Producción y publicación de servicios interoperables WMS.</li>
+                            </ul>
+                            <ul class="lista">
+                                <li>Diseño, gestión y consulta de base de datos espaciales ambientales.</li>
+                            </ul>
+                            <ul class="lista">
+                                <li>Análisis de información ambiental mediante imágenes satélite  para la gestión del Medio Ambiente.</li>
+                            </ul>							
+
+                        </div>
+
+                        <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                            <p> 
+							    <strong>Desde:</strong> 
+								Abril&nbsp;2016 
+							</p>
+                      
+					  
+                            <p>
+                                <strong>Hasta:</strong>&nbsp;
+                                Octubre 2016
+                            </p>
+                            <p>
+<!--                               <i class="fa fa-clock-o icon-left"></i>
+                              1 year 7 months
+                            </p> -->
+                        </div>
+                      </li>
+
+                      <li class="card card-nested clearfix">
+                        <div class="content has-sidebar">
+                          <p class="clear-margin-sm">
+                            <strong>Monitora de Aula Matinal y Actividades extraescolares</strong>,&nbsp;
+                              Educomex S.L.
+                          </p>
+                          <p class="text-muted visible-xs visible-sm">
+                            <small>
+                              <span class="space-right">
+                                Dic 2013 -
+                                  Jun 2015
+                              </span>
+                            </small>
+                          </p>
+                          <p> 
+						    <ul>
+                                <li>Tareas de monitora de aula matinal y actividades extraescolares.</li>
+                            </ul>
+						  </p>
+                            
+                        </div>
+
+                        <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                            <p>
+                              <strong>Desde:</strong>&nbsp;
+                              Sep&nbsp;2012
+                            </p>
+
+                            <p>
+                                <strong>Hasta:</strong>&nbsp;
+                                Jun&nbsp;2013
+                            </p>
+                        </div>
+                      </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="detail" id="skills">
+                <div class="icon">
+                  <i class="fa fa-lg fa-code"></i>
+                  <span class="mobile-title">Habilidades</span>
+                </div>
+                <div class="info">
+                  <h4 class="title text-uppercase">
+                    Habilidades
+                  </h4>
+
+                  <div class="content">
+                    <ul class="list-unstyled">
+                        <li class="card card-nested card-skills">
+                            <div class="skill-level js-tooltip" title="Master" data-placement="left">
+                              <div class="skill-progress master">
+                              </div>
+                            </div>
+                          <div class="skill-info">
+                            <strong>Software</strong>
+
+                            <div class="space-top labels">
+                                <span class="label label-keyword">Arcgis</span>
+                                <span class="label label-keyword">Qgis</span>   						
+                            </div>
+                          </div>
+                        </li>
+						 <li class="card card-nested card-skills">
+						    <div class="skill-level js-tooltip" title="Master" data-placement="left">
+                              <div class="skill-progress master">
+                              </div>
+                            </div>
+                          <div class="skill-info">
+                            <strong>Bases de Datos</strong>
+                            <div class="space-top labels">
+                                <span class="label label-keyword">PostgreSQL</span>                                
+                                <span class="label label-keyword">Oracle Database 11g</span>
+								<span class="label label-keyword">Microsoft Access</span>
+                                
+                            </div>
+                          </div>
+                        </li>
+                        	<li class="card card-nested card-skills">
+						    <div class="skill-level js-tooltip" title="Master" data-placement="left">
+                              <div class="skill-progress master">
+                              </div>
+                            </div>
+                          <div class="skill-info">
+                            <strong>Web Mapping - Internet</strong>
+                            <div class="space-top labels">
+                                <span class="label label-keyword">Geoserver</span>                                
+                                <span class="label label-keyword">Openlayers</span>
+								<span class="label label-keyword">HTML5</span>
+								<span class="label label-keyword">CSS</span>
+								<span class="label label-keyword">JavaScript</span>
+								<span class="label label-keyword">XML</span>
+                                
+                            </div>
+                          </div>
+                        </li>
+                        <li class="card card-nested card-skills">
+                          <div class="skill-info">
+                            <strong>Aprendiendo</strong>
+                            <div class="space-top labels">                                                                
+                                <span class="label label-keyword">Python</span>                               
+								<span class="label label-keyword">Leaflet</span>
+                                <span class="label label-keyword">MongoDB</span>
+                                <span class="label label-keyword">Inglés (B2-First Certificate in English)</span>									
+                            </div>
+                          </div>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail" id="education">
+                <div class="icon">
+                  <i class="fa fa-lg fa-mortar-board"></i>
+                  <span class="mobile-title">Educación</span>
+                </div>
+                <div class="info">
+                  <h4 class="title text-uppercase">
+                    Educación
+                  </h4>
+
+                  <div class="content">
+                    <ul class="list-unstyled">
+                        <li class="card card-nested">
+                          <div class="content has-sidebar">
+                            <p class="clear-margin-sm">
+                              <strong><a href="https://www.upo.es/fcex/contenido?pag=/portal/fcex/titulaciones/cam/cam" target="_blank">Licenciatura en Ciencias Ambientales.</a></strong>
+                              Universidad Pablo de Olavide. Sevilla
+                            </p>
+                            <p class="visible-xs visible-sm text-muted">
+                              <small>
+                                Sep 2006 -
+                                Jul 2014
+                              </small>
+                            </p>
+                            <i></i>
+                            <div class="space-top labels">
+								<span class="label label-keyword">Evaluación de Impacto Ambiental</span>
+                                <span class="label label-keyword">Sistemas Naturales</span>
+                                <span class="label label-keyword">Ecología</span>
+                                <span class="label label-keyword">Medio Físico</span>                             
+                                <span class="label label-keyword"></span>
+                            </div>
+                          </div>
+                          <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                            <p>
+                              <strong>Desde:</strong>&nbsp;
+                              Sep&nbsp;2005
+                            </p>
+                            <p>
+                                <strong>Hasta:</strong>&nbsp;
+                                Jul&nbsp;2009
+                            </p>
+                          </div>
+                        </li>
+						                        
+                        <li class="card card-nested">
+                          <div class="content has-sidebar">
+                            <p class="clear-margin-sm">
+                              <strong><a href="http://madeirasic.us.es/mastersig/?page_id=12" target="_blank">Máster en Sistema de Información Geográfica: Planificación, Ordenación Territorial y Medio Ambiente </a></strong>,&nbsp;
+                              Centro de formación permanente. Universidad de Sevilla
+                            </p>
+                           <p class="visible-xs visible-sm text-muted">
+                              <small>
+                                Sep 2015 -
+                                  Jun 2016
+                              </small>
+                            </p>
+                            <i></i>
+                            <div class="space-top labels">
+                                <span class="label label-keyword">Sistemas de Información Geográfica</span>
+                                <span class="label label-keyword">Arcgis</span>
+                                <span class="label label-keyword">Qgis</span>
+                                <span class="label label-keyword">HTML5</span>
+                                <span class="label label-keyword">CSS</span>
+								<span class="label label-keyword">JavaScript</span>
+                                <span class="label label-keyword">Base de datos relacionales</span>
+                                <span class="label label-keyword">PostgresSQL</span>
+                                <span class="label label-keyword">Geoserver</span>
+                                <span class="label label-keyword"></span>
+                            </div>
+                          </div>
+                          <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                            <p>
+                              <strong>Desde:</strong>&nbsp;
+                              Sep&nbsp;2015
+                            </p>
+                            <p>
+                                <strong>Hasta:</strong>&nbsp;
+                                Jun&nbsp;2016
+                            </p>
+                          </div>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+                <div class="detail" id="awards">
+                  <div class="icon">
+                    <i class="fa fa-lg fa-trophy"></i>
+                    <span class="mobile-title">Formación Complementaria</span>
+                  </div>
+                  <div class="info">
+                    <h4 class="title text-uppercase">
+                      Formación Complementaria
+                    </h4>
+
+                    <div class="content">
+                      <ul class="list-unstyled">
+                          <li class="card card-nested">
+                            <div class="content has-sidebar">
+                              <p class="clear-margin-sm">
+                                <strong>Curso de Educador Ambiental e Interprete Ambiental (300h)</strong>,&nbsp;
+                                Instituto Erudite. 2015
+                              </p>
+                              <p class="visible-xs visible-sm text-muted">
+                                <small>
+                                  Fecha: Jun&nbsp;2005
+                                </small>
+                              </p>
+                              
+                            </div>
+                            <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                              <p>
+                                <strong>Fecha:</strong>&nbsp;
+                                Jun&nbsp;2005
+                              </p>
+                            </div>
+                          </li>
+                      </ul>
+                    </div>
+                    <div class="content">
+                      <ul class="list-unstyled">
+                          <li class="card card-nested">
+                            <div class="content has-sidebar">
+                              <p class="clear-margin-sm">
+                                <strong>Curso Formación de formadores: metodología presencial y e-learning (120 h)</strong>,&nbsp;
+                                Fundación Universidad Pablo de Olavide. 2014
+                              </p>
+                              <p class="visible-xs visible-sm text-muted">
+                                <small>
+                                  Fecha: Jun&nbsp;2005
+                                </small>
+                              </p>
+                             
+                            </div>
+                            <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                              <p>
+                                <strong>Fecha:</strong>&nbsp;
+                                Jun&nbsp;2005
+                              </p>
+                            </div>
+                          </li>
+                      </ul>
+                    </div>					
+                    <div class="content">
+                      <ul class="list-unstyled">
+                          <li class="card card-nested">
+                            <div class="content has-sidebar">
+                              <p class="clear-margin-sm">
+                                <strong>Directora de Actividades de Tiempo Libre Infantil y Juvenil (370 h)</strong>,&nbsp;
+                                Escuela de formación del Movimiento Scout Católico de Cataluña. 2013
+                              </p>
+                              <p class="visible-xs visible-sm text-muted">
+                                <small>
+                                  Fecha: Jun&nbsp;2005
+                                </small>
+                              </p>
+                              
+                            </div>
+                            <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                              <p>
+                                <strong>Fecha:</strong>&nbsp;
+                                Jun&nbsp;2005
+                              </p>
+                            </div>
+                          </li>
+                      </ul>
+                    </div>					
+                    <div class="content">
+                      <ul class="list-unstyled">
+                          <li class="card card-nested">
+                            <div class="content has-sidebar">
+                              <p class="clear-margin-sm">
+                                <strong>Monitora de Ocio y Tiempo Libre (343 h)</strong>,&nbsp;
+                                Escuela de formación Movimiento Scout Católico de Andalucía. 2011
+                              </p>
+                              <p class="visible-xs visible-sm text-muted">
+                                <small>
+                                  Fecha: Jun&nbsp;2005
+                                </small>
+                              </p>
+                             
+                            </div>
+                            <div class="sidebar text-muted text-center hidden-xs hidden-sm">
+                              <p>
+                                <strong>Fecha:</strong>&nbsp;
+                                Jun&nbsp;2005
+                              </p>
+                            </div>
+                          </li>
+                      </ul>
+                    </div>							
+                  </div>
+                </div>
+
+                <div class="detail" id="volunteer-work">
+                  <div class="icon">
+                    <i class="fa fa-lg fa-child"></i>
+                    <span class="mobile-title">Voluntariado</span>
+                  </div>
+                  <div class="info">
+                    <h4 class="title text-uppercase">
+                      Voluntariado
+                    </h4>
+
+                    <div class="content">
+                      <ul class="list-unstyled">
+                          <li class="card card-nested">
+                            <div class="content has-sidebar">
+                              <p class="clear-margin-sm">
+                                <strong>Voluntario</strong>,&nbsp;
+                                  <a href="http://www.scoutsdesevilla.com/web/"  target="_blank">MSC - Scouts de Sevilla MSC</a>
+                              </p>
+                              <p class="visible-xs visible-sm text-muted">
+                                <small>
+                                  Jun&nbsp;2007 -
+                                  Sep&nbsp;2013
+                                </small>
+                              </p>
+                              <p>Voluntaria en un grupo Scouts llevando a cabo proyectos educativos y monitora en campamentos de verano. </p>
+                              <ul>
+                              </ul>
+                            </div>
+                            <div class="sidebar hidden-xs hidden-sm text-muted text-center">
+                              <p>
+                                <strong>Desde:</strong>&nbsp;
+                                Jun&nbsp;2007
+                              </p>
+                              <p>
+                                  <strong>Hasta:</strong>&nbsp;
+                                  Sep&nbsp;2013
+                              </p>
+                            </div>
+                          </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="detail" id="interests">
+                  <div class="icon">
+                    <i class="fa fa-lg fa-heart"></i>
+                    <span class="mobile-title">Intereses</span>
+                  </div>
+                  <div class="info">
+                    <h4 class="title text-uppercase">
+                      Intereses
+                    </h4>
+
+                    <div class="content">
+                      <ul class="list-unstyled">
+					  
+                          <li class="space-top labels">
+						  <span class="label label-keyword">Naturaleza</span>
+						  <span class="label label-keyword">Actividades al aire libre</span>
+						  <span class="label label-keyword">Senderismo</span>
+						  <span class="label label-keyword">Deportes</span>
+						  <span class="label label-keyword">Educación</span>
+						  <span class="label label-keyword">Escultismo</span>
+						  <span class="label label-keyword">Fotografía</span>
+						  <span class="label label-keyword">Internet</span>
+                      
+                           
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+ 
+
+	
+  </div> 
+  </div>
+    
+
+    
+	
+	
+
+
+<!-- Tooltip -->
+	    
+		
+	
+	    <footer>
+      	      <p>Reyes Antequera Medrano - Universidad de Sevilla</p>
+	    </footer>
+	  </div>
+  	  
+	<script>   
+         $(function() {
+    $( "#tabs" ).tabs();
+  });
+$("#accordion > li").click(function(){
+
+	if(false == $(this).next().is(':visible')) {
+		$('#accordion > ul').slideUp(300);
+	}
+	$(this).next().slideToggle(300);
+});
+
+$('#accordion > ul:eq(0)').show();
+
+	</script>	
+
+	</body>
+</html>
+
